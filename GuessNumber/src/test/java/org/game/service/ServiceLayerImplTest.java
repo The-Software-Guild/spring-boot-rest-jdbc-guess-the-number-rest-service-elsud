@@ -1,7 +1,9 @@
 package org.game.service;
 
+import org.game.dao.GameDao;
 import org.game.dto.Game;
 import org.game.dto.Round;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,15 @@ public class ServiceLayerImplTest {
 
     @Autowired
     ServiceLayer testService;
+
+    // use to fill games in setUp method
+    @Autowired
+    GameDaoStub gameDaoStub;
+
+    @Before
+    public void setUp() {
+        gameDaoStub.fillGame();
+    }
 
     @Test
     public void startGame() {
@@ -75,6 +86,37 @@ public class ServiceLayerImplTest {
         assertEquals(1, round.getGameId());
         assertEquals("3333", round.getGuess());
         assertEquals("e:0:p:0", round.getResult());
+    }
+
+    @Test
+    public void checkPartialAndExactGuess() {
+        // real answer is 1100
+        Round round = testService.checkGuess(1, "1213");
+        assertEquals(1, round.getGameId());
+        assertEquals("1213", round.getGuess());
+        assertEquals("e:1:p:1", round.getResult());
+    }
+
+    @Test
+    public void checkPartialGuess() {
+        // real answer is 1100
+        Round round = testService.checkGuess(1, "0011");
+        assertEquals(1, round.getGameId());
+        assertEquals("0011", round.getGuess());
+        assertEquals("e:0:p:4", round.getResult());
+    }
+
+    @Test
+    public void checkExactGuess() {
+        // real answer is 1100
+        Round round = testService.checkGuess(1, "1100");
+        assertEquals(1, round.getGameId());
+        System.out.println(round.getGuess().toString());
+        assertEquals("1100", round.getGuess());
+        assertEquals("e:4:p:0", round.getResult());
+        // check that game is finished and we can see the answer
+        assertTrue(testService.getGameById(1).isFinished());
+        assertEquals("1100", testService.getGameById(1).getAnswer());
     }
 
 }

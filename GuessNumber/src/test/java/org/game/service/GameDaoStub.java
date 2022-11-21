@@ -16,18 +16,6 @@ public class GameDaoStub implements GameDao {
 
     private Map<Integer, Game> games = new HashMap<>();
 
-    public GameDaoStub() {
-        Game game1 = new Game();
-        game1.setGameId(1);
-        game1.setFinished(false);
-        game1.setAnswer("1100");
-        Game game2 = new Game();
-        game2.setGameId(2);
-        game2.setFinished(true);
-        game2.setAnswer("2222");
-        games.put(1, game1);
-        games.put(2, game2);
-    }
     @Override
     public Game getGame(int gameId) {
         return games.get(gameId);
@@ -52,6 +40,20 @@ public class GameDaoStub implements GameDao {
         Game game = games.get(gameId);
         game.setFinished(true);
         return true;
+    }
+
+    public void fillGame() {
+        games = new HashMap<>();
+        Game game1 = new Game();
+        game1.setGameId(1);
+        game1.setFinished(false);
+        game1.setAnswer("1100");
+        Game game2 = new Game();
+        game2.setGameId(2);
+        game2.setFinished(true);
+        game2.setAnswer("2222");
+        games.put(1, game1);
+        games.put(2, game2);
     }
 
 }
